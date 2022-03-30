@@ -12,7 +12,7 @@ const LandingPage = () => {
                 Gemology
               </a>
               <button
-                className="navbar-togglerr"
+                className="navbar-toggler"
                 type="button"
                 aria-controls="navbarTogglerDemo02"
                 aria-expanded="false"
