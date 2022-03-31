@@ -8,9 +8,9 @@ const LandingPage = () => {
         <header className="fixed-top">
           <div className="container-nav">
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
-              <a className="navbar-brand logo" href="#">
+              <span className="navbar-brand logo" >
                 Gemology
-              </a>
+              </span>
               <button
                 className="navbar-toggler"
                 type="button"
@@ -81,7 +81,7 @@ const LandingPage = () => {
                   src="../../../assets/arrow-down-sign-to-navigate.png"
                   height="30"
                   width="30"
-                  alt=""
+                  alt="navigation"
                 />
               </div>
             </div>
@@ -325,6 +325,7 @@ const LandingPage = () => {
                               src="../../../assets/person1.jpg"
                               width="50px"
                               height="50px"
+                              alt="person"
                             />
                           </div>
                           <div className="testimoni-info">
@@ -352,6 +353,7 @@ const LandingPage = () => {
                               src="../../../assets/person2.jpg"
                               width="50px"
                               height="50px"
+                              alt="person2"
                             />
                           </div>
                           <div className="testimoni-info">
@@ -359,7 +361,7 @@ const LandingPage = () => {
                             <h6 className="person-job">Nerdreactor</h6>
                           </div>
                           <div className="contact-section">
-                            <img src="../../../assets/twitter.svg" alt="" />
+                            <img src="../../../assets/twitter.svg" alt="twitter" />
                           </div>
                         </div>
                         <h6 className="text-white">
@@ -380,6 +382,7 @@ const LandingPage = () => {
                               src="../../../assets/person3.jpg"
                               width="50px"
                               height="50px"
+                              alt="Person3"
                             />
                           </div>
                           <div className="testimoni-info">
@@ -387,7 +390,7 @@ const LandingPage = () => {
                             <h6 className="person-job">Uproxx</h6>
                           </div>
                           <div>
-                            <img src="../../../assets/twitter.svg" alt="" />
+                            <img src="../../../assets/twitter.svg" alt="twitter" />
                           </div>
                         </div>
                         <h6 className="text-white">
