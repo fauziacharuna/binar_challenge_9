@@ -1,20 +1,54 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import firebaseAuth from "../../config/firebaseAuth";
 
 const RegisterPage = () => {
+  const [credentials, setCredentials] = useState({
+    email: "",
+    password: "",
+  });
+
+  const onRegisterClick = () => {
+    const { email, password } = credentials;
+    createUserWithEmailAndPassword(firebaseAuth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        console.log(userCredential);
+        // ...
+      })
+      .catch((error) => {
+        console.error(error);
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+      });
+  };
+
+  const onValueChange = (event, label) => {
+    const value = event.target.value;
+    setCredentials((prevState) => ({
+      ...prevState,
+      [label]: value,
+    }));
+  };
   return (
     <div style={{ backgroundColor: "#252525" }}>
       <div className="container-fluid">
         <div className="row">
           <div className="col" style={{ marginTop: 61, marginLeft: 72 }}>
-            <h3
-              style={{
-                color: "#FBBC05",
-                fontWeight: "bold",
-                fontSize: "36px",
-              }}
-            >
-              Gemology
-            </h3>
+            <Link to={"/"}>
+              <h3
+                style={{
+                  color: "#FBBC05",
+                  fontWeight: "bold",
+                  fontSize: "36px",
+                }}
+              >
+                Gemology
+              </h3>
+            </Link>
             <div
               className="mx-auto"
               style={{
@@ -36,20 +70,21 @@ const RegisterPage = () => {
                 </p>
               </div>
               <div>
-                  <input
-                      className="w-100"
-                      style={{
-                          height: " 48px",
-                          margin: "16px 0px",
-                          padding: "0px 16px 0px 14px",
-                          borderRadius: "4px",
-                          border: "1px solid #D0D0D0",
-                          fontSize: "14px",
-                          color: "#8A8A8A",
-                      }}
-                      type="text"
-                      placeholder="Nama"
-                  />
+                <input
+                  className="w-100"
+                  style={{
+                    height: " 48px",
+                    margin: "16px 0px",
+                    padding: "0px 16px 0px 14px",
+                    borderRadius: "4px",
+                    border: "1px solid #D0D0D0",
+                    fontSize: "14px",
+                    color: "#8A8A8A",
+                  }}
+                  type="text"
+                  placeholder="Nama"
+                  onChange={(event) => onValueChange(event, "nama")}
+                />
                 <input
                   className="w-100"
                   style={{
@@ -63,6 +98,7 @@ const RegisterPage = () => {
                   }}
                   type="email"
                   placeholder="Masukkan Email"
+                  onChange={(event) => onValueChange(event, "email")}
                 />
                 <input
                   className="w-100"
@@ -77,6 +113,7 @@ const RegisterPage = () => {
                   }}
                   type="password"
                   placeholder="Kata Sandi"
+                  onChange={(event) => onValueChange(event, "password")}
                 />
                 <button
                   className="w-100"
@@ -89,8 +126,9 @@ const RegisterPage = () => {
                     fontSize: "16px",
                     border: "none",
                   }}
+                  onClick={onRegisterClick}
                 >
-                 SUBMIT
+                  Register
                 </button>
               </div>
               <p
@@ -100,9 +138,7 @@ const RegisterPage = () => {
                   fontSize: "14px",
                   color: "#FFFFFF",
                 }}
-              >
-
-              </p>
+              ></p>
               <div
                 className="d-flex justify-content-between"
                 style={{ marginTop: "34px" }}
@@ -116,7 +152,6 @@ const RegisterPage = () => {
                     width: "100px",
                   }}
                 />
-
               </div>
             </div>
           </div>

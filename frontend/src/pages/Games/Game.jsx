@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import AuthContext from "../../context/AuthContext";
 import Navbar from "../../components/Navbar";
 import Player from "./player";
 import "./styles.css";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 function Game() {
+  const location = useLocation();
+  const authenticatedUser = useContext(AuthContext);
   const weapons = ["rock", "paper", "scissors"];
   const [playerOne, setPlayerOne] = useState(weapons[0]);
   const [playerTwo, setPlayerTwo] = useState(weapons[0]);
@@ -42,7 +46,10 @@ function Game() {
     setPlayerOne(weapon);
     setWinner("");
   };
-  return (
+
+  if (authenticatedUser === undefined || null) return null;
+
+  return authenticatedUser ? (
     <>
       <Navbar />
       <h1 style={{ textAlign: "center" }}>Rock Paper Scissors</h1>
@@ -72,6 +79,8 @@ function Game() {
         Score: {score}
       </div>
     </>
+  ) : (
+    <Navigate to={"/login"} replace state={{ from: location }} />
   );
 }
 

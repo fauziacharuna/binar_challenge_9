@@ -1,77 +1,28 @@
 import React from "react";
+import Navbar from "../../components/Navbar";
+import { useNavigate } from "react-router-dom";
 import "./styles.css";
 
 const LandingPage = () => {
+  var navigate = useNavigate();
+
+  const navigateGame = () => {
+    navigate("/game");
+  };
+
   return (
     <>
       <div className="container-fluid main" id="home">
-        <header className="fixed-top">
-          <div className="container-nav">
-            <nav className="navbar navbar-expand-lg navbar-light bg-light">
-              <span className="navbar-brand logo" >
-                Gemology
-              </span>
-              <button
-                className="navbar-toggler"
-                type="button"
-                aria-controls="navbarTogglerDemo02"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-              >
-                <span className="navbar-toggler-icon"></span>
-              </button>
-
-              <div
-                className="collapse navbar-collapse p-2 menu"
-                id="navbarTogglerDemo02"
-              >
-                <ul className="navbar-nav m-auto mt-2 mt-lg-0">
-                  <li className="nav-item active">
-                    <a className="nav-link" href="#home">
-                      Home <span className="sr-only">(current)</span>
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="#games">
-                      Games
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="#features">
-                      Features
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="#requirements">
-                      Requirements
-                    </a>
-                  </li>
-                </ul>
-                <div className="form-inline my-2 my-lg-0">
-                  <ul className="navbar-nav mt-2 mt-lg-0">
-                    <li className="nav-item">
-                      <a className="nav-link" href="register.html">
-                        Register
-                      </a>
-                    </li>
-                    <li className="nav-item">
-                      <a className="nav-link" href="login.html">
-                        Login
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </nav>
-          </div>
-        </header>
+        <Navbar isFixedTop={"fixed-top"} />
         <div className="container-fluid hero">
           <div className="row justify-content-center">
             <div className="col-md-8 col-lg-10 col-xl-12">
               <div className="container hero text-center text-white">
                 <h1 className="display-2">PLAY TRADISIONAL</h1>
                 <p>Experience new tradisional game play</p>
-                <button className="button-play">PLAY NOW</button>
+                <button onClick={navigateGame} className="button-play">
+                  Play Now
+                </button>
               </div>
               <br />
               <div className="text-center story">
@@ -288,7 +239,7 @@ const LandingPage = () => {
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="2">
+                  <td colSpan="2">
                     <h5>GRAPHICS:</h5>
                     <p>
                       NVIDIA GeForce GTX 660 2GB or
@@ -361,7 +312,10 @@ const LandingPage = () => {
                             <h6 className="person-job">Nerdreactor</h6>
                           </div>
                           <div className="contact-section">
-                            <img src="../../../assets/twitter.svg" alt="twitter" />
+                            <img
+                              src="../../../assets/twitter.svg"
+                              alt="twitter"
+                            />
                           </div>
                         </div>
                         <h6 className="text-white">
@@ -390,7 +344,10 @@ const LandingPage = () => {
                             <h6 className="person-job">Uproxx</h6>
                           </div>
                           <div>
-                            <img src="../../../assets/twitter.svg" alt="twitter" />
+                            <img
+                              src="../../../assets/twitter.svg"
+                              alt="twitter"
+                            />
                           </div>
                         </div>
                         <h6 className="text-white">
