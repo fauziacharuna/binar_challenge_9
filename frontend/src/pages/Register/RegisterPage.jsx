@@ -8,6 +8,15 @@ import {
 import firebaseAuth from "../../config/firebaseAuth";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import {
+  getFirestore,
+  query,
+  getDocs,
+  collection,
+  where,
+  addDoc,
+} from "firebase/firestore";
+import firebaseDB from "../../config/firebaseDB";
 
 const RegisterPage = () => {
   let navigate = useNavigate();
@@ -19,12 +28,19 @@ const RegisterPage = () => {
     password: "",
   });
 
-  const onRegisterClick = () => {
+  const onRegisterClick = async () => {
     const { displayName, email, password } = credentials;
     createUserWithEmailAndPassword(firebaseAuth, email, password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
+        addDoc(collection(firebaseDB, "users"), {
+          uid: user.uid,
+          displayName,
+          email,
+          password,
+          score: 0,
+        });
         updateProfile(auth.currentUser, {
           displayName,
         }).then(() => {});

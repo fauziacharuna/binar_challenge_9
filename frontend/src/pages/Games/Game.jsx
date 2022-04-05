@@ -2,16 +2,28 @@ import React, { useState, useContext, useEffect } from "react";
 import AuthContext from "../../context/AuthContext";
 import Navbar from "../../components/Navbar";
 import Player from "./player";
+import firebaseDB from "../../config/firebaseDB";
+import {
+  doc,
+  updateDoc,
+  where,
+  getDocs,
+  query,
+  collection,
+} from "firebase/firestore";
 import "./styles.css";
 import { Navigate, useLocation } from "react-router-dom";
 
 function Game() {
   const location = useLocation();
   const authenticatedUser = useContext(AuthContext);
+  console.log(authenticatedUser.uid);
   const weapons = ["rock", "paper", "scissors"];
   const [playerOne, setPlayerOne] = useState(weapons[0]);
   const [playerTwo, setPlayerTwo] = useState(weapons[0]);
   const [winner, setWinner] = useState("");
+  const [uid, setUid] = useState("");
+  const [scoreFromDoc, setScoreFromDoc] = useState(0);
   const [score, setScore] = useState(0);
 
   useEffect(() => {
@@ -39,6 +51,28 @@ function Game() {
     setPlayerOne(weapon);
     setPlayerTwo(weapons[Math.floor(Math.random() * weapons.length)]);
     setWinner("");
+  };
+
+  const updateScore = async () => {
+    const q = query(
+      collection(firebaseDB, "users"),
+      where("uid", "==", authenticatedUser.uid)
+    );
+    const querySnapshot = await getDocs(q);
+    const res = querySnapshot.forEach((doc) => {
+      console.log(doc.id, " => ", doc.data().score);
+      setUid(doc.id);
+      setScoreFromDoc(doc.data().score);
+    });
+    const docId = doc(firebaseDB, "users", uid);
+
+    if (score > scoreFromDoc) {
+      await updateDoc(docId, {
+        score,
+      });
+    } else {
+      return;
+    }
   };
 
   if (authenticatedUser === undefined) return null;
@@ -75,6 +109,7 @@ function Game() {
           {console.log(authenticatedUser.displayName)}
         </div>
       </div>
+      <button onClick={() => updateScore()}>Submit Score</button>
     </>
   ) : (
     <Navigate to={"/login"} replace state={{ from: location }} />
