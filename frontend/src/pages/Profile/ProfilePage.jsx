@@ -1,11 +1,81 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import "./styles.css";
 
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
+import AuthContext from "../../context/AuthContext";
+
+import {
+    reauthenticateWithCredential,
+    EmailAuthProvider,
+    getAuth,
+    updateProfile,
+    updateEmail
+} from "firebase/auth";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+
 const ProfilePage = () => {
-    function toggleEdit() {
+    
+    const auth = getAuth();
+    const authenticatedUser = useContext(AuthContext);
+    console.log(authenticatedUser);
+
+    let navigate = useNavigate();
+
+    const [credentials, setCredentials] = useState({
+        displayName: "",
+        email: "",
+        password: "",
+    });
+
+    const { displayName, email, password } = credentials;
+
+    function handleSubmit(event) {
+        event.preventDefault()
+        
+        const creds = EmailAuthProvider.credential(
+            auth.currentUser.email,
+            password
+        )
+
+        reauthenticateWithCredential(
+            auth.currentUser, 
+            creds
+        ).then((val) => {
+            console.log("berasil re-authenticate: ",val)
+            updateProfile(authenticatedUser, {
+                displayName: displayName
+            }).then(() => {
+                console.log("berhasil 1")
+            }).catch((error) => {
+                console.log("errror 2", error)
+                Swal.fire("Error", `Gagal memperbarui nama`, "error");
+            });
+    
+            updateEmail(auth.currentUser, email).then(() => {
+                console.log("berhasil 2");
+                Swal.fire("Success", `Data user berhasil diperbarui`, "success");
+            }).catch((error) => {
+                console.log("error 2", error)
+                Swal.fire("Error", `Gagal memperbarui email`, "error");
+            });
+        }).catch((e) => {
+            console.log("error re-authenticate:", e)
+            Swal.fire("Autentikasi gagal", `Password salah`, "error");
+        })
+
+        console.log(authenticatedUser);
+
+        
+
+        
+
+
+    }
+    function toggleEdit(event) {
+        event.preventDefault()
 
         var editButton = document.getElementsByClassName("edit1")[0]
         var cancelButton = document.getElementsByClassName("edit2")[0]
@@ -27,26 +97,38 @@ const ProfilePage = () => {
 
         var submit = document.getElementById("submit")
         submit.toggleAttribute("hidden")
-
     }
+
+    const onValueChange = (event, label) => {
+        const value = event.target.value;
+        setCredentials((prevState) => ({
+            ...prevState,
+            [label]: value,
+        }));
+    };
+
     return (
         <div style={{ backgroundColor: "#252525" }}>
             <div className="container-fluid">
                 <div className="row">
                     <div className="col" style={{ marginTop: 61, marginLeft: 72 }}>
-                        <Form>
+                        <Form onSubmit={handleSubmit}>
                             <Button className="edit1" onClick={toggleEdit} style={{ "border": "none" }}>
                                 Edit
                             </Button>
                             <Form.Group className="mb-3">
-                                <Form.Label>Nama</Form.Label>
-                                <Form.Control className="edittable" placeholder="Nama" disabled />
+                                <Form.Label className="form-label">Nama</Form.Label>
+                                <Form.Control className="edittable" defaultValue={authenticatedUser.displayName} onChange={(event) => onValueChange(event, "displayName")} disabled />
                             </Form.Group>
                             <Form.Group className="mb-3">
-                                <Form.Label>Email</Form.Label>
-                                <Form.Control className="edittable" placeholder="Email" disabled />
+                                <Form.Label className="form-label">Email</Form.Label>
+                                <Form.Control className="edittable" defaultValue={authenticatedUser.email} onChange={(event) => onValueChange(event, "email")} disabled />
                             </Form.Group>
-                            <Button id="submit" variant="primary" type="submit" style={{"background": "#00B4FF"}} hidden>
+                            <Form.Group className="mb-3">
+                                <Form.Label className="form-label">Password</Form.Label>
+                                <Form.Control type="password" placeholder="Insert password" className="edittable" onChange={(event) => onValueChange(event, "password")} disabled />
+                            </Form.Group>
+                            <Button id="submit" variant="primary" type="submit" style={{ "background": "#00B4FF" }} hidden>
                                 Submit
                             </Button>
                         </Form>

@@ -25,9 +25,9 @@ const LoginPage = () => {
         // Signed in
         const user = userCredential.user;
         console.log(user);
-          Swal.fire("Success", `${user.email} Berhasil login`, "success");
+        Swal.fire("Success", `${user.email} Berhasil login`, "success");
 
-          if (userCredential) {
+        if (userCredential) {
           navigate("/");
         }
         // ...
@@ -37,9 +37,9 @@ const LoginPage = () => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorMessage);
-          Swal.fire("Error", `${errorMessage}`, "error");
+        Swal.fire("Error", `${errorMessage}`, "error");
 
-          // ..
+        // ..
       });
   };
 
@@ -56,9 +56,9 @@ const LoginPage = () => {
         const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
-          Swal.fire("Success", `${user.email} Berhasil ditambahkan`, "success");
+        Swal.fire("Success", `${user.email} Berhasil ditambahkan`, "success");
 
-          if (token && user) {
+        if (token && user) {
           navigate("/");
         }
       })
@@ -116,7 +116,9 @@ const LoginPage = () => {
                 >
                   Masuk
                 </p>
-                <p style={{ fontSize: 16, color: "#FBBC05" }}>Daftar</p>
+                <Link to={"/register"}>
+                  <p style={{ fontSize: 16, color: "#FBBC05" }}>Daftar</p>
+                </Link>
               </div>
               <div>
                 <input

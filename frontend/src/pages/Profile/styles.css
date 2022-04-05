@@ -7,3 +7,17 @@
     border: none;
     background: #FF0000;
 }
+
+.edit2:focus {
+    border: none;
+    background: #FF0000;
+}
+
+.edittable {
+    color: black;
+    font-weight: 500;
+}
+
+.form-label {
+    color: white
+}
