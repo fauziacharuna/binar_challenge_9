@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "./styles.css";
 
 import Form from 'react-bootstrap/Form';
@@ -13,11 +13,21 @@ import {
     updateProfile,
     updateEmail
 } from "firebase/auth";
+import firebaseDB from "../../config/firebaseDB";
+import {
+    doc,
+    updateDoc,
+    where,
+    getDocs,
+    query,
+    collection,
+} from "firebase/firestore";
+
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
-    
+
     const auth = getAuth();
     const authenticatedUser = useContext(AuthContext);
     console.log(authenticatedUser);
@@ -30,21 +40,39 @@ const ProfilePage = () => {
         password: "",
     });
 
+    const [uid, setUid] = useState("");
+    const [scoreFromDoc, setScoreFromDoc] = useState(0);
+
+    const q = query(
+        collection(firebaseDB, "users"),
+        where("uid", "==", authenticatedUser.uid)
+    );
+
+    async function getScore() {
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            console.log(doc.id, " => ", doc.data().score);
+            setUid(doc.id);
+            setScoreFromDoc(doc.data().score);
+        });
+    }
+    useEffect(getScore, [])
+
     const { displayName, email, password } = credentials;
 
     function handleSubmit(event) {
         event.preventDefault()
-        
+
         const creds = EmailAuthProvider.credential(
             auth.currentUser.email,
             password
         )
 
         reauthenticateWithCredential(
-            auth.currentUser, 
+            auth.currentUser,
             creds
         ).then((val) => {
-            console.log("berasil re-authenticate: ",val)
+            console.log("berasil re-authenticate: ", val)
             updateProfile(authenticatedUser, {
                 displayName: displayName
             }).then(() => {
@@ -53,7 +81,7 @@ const ProfilePage = () => {
                 console.log("errror 2", error)
                 Swal.fire("Error", `Gagal memperbarui nama`, "error");
             });
-    
+
             updateEmail(auth.currentUser, email).then(() => {
                 console.log("berhasil 2");
                 Swal.fire("Success", `Data user berhasil diperbarui`, "success");
@@ -67,12 +95,6 @@ const ProfilePage = () => {
         })
 
         console.log(authenticatedUser);
-
-        
-
-        
-
-
     }
     function toggleEdit(event) {
         event.preventDefault()
@@ -117,21 +139,24 @@ const ProfilePage = () => {
                                 Edit
                             </Button>
                             <Form.Group className="mb-3">
-                                <Form.Label className="form-label">Nama</Form.Label>
+                                <Form.Label className="text-white">Nama</Form.Label>
                                 <Form.Control className="edittable" defaultValue={authenticatedUser.displayName} onChange={(event) => onValueChange(event, "displayName")} disabled />
                             </Form.Group>
                             <Form.Group className="mb-3">
-                                <Form.Label className="form-label">Email</Form.Label>
+                                <Form.Label className="text-white">Email</Form.Label>
                                 <Form.Control className="edittable" defaultValue={authenticatedUser.email} onChange={(event) => onValueChange(event, "email")} disabled />
                             </Form.Group>
                             <Form.Group className="mb-3">
-                                <Form.Label className="form-label">Password</Form.Label>
+                                <Form.Label className="text-white">Password</Form.Label>
                                 <Form.Control type="password" placeholder="Insert password" className="edittable" onChange={(event) => onValueChange(event, "password")} disabled />
                             </Form.Group>
                             <Button id="submit" variant="primary" type="submit" style={{ "background": "#00B4FF" }} hidden>
                                 Submit
                             </Button>
                         </Form>
+
+                        <br />
+                        <h1 className="text-white">SCORE: {scoreFromDoc}</h1>
                     </div>
                     <div className="col" style={{ margin: "24px" }}>
                         <img src="../../../assets/img-login.svg" alt="" />
