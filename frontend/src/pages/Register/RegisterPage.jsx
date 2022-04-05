@@ -20,7 +20,7 @@ const RegisterPage = () => {
   });
 
   const onRegisterClick = () => {
-    const { name, email, password } = credentials;
+    const { displayName, email, password } = credentials;
     createUserWithEmailAndPassword(firebaseAuth, email, password)
       .then((userCredential) => {
         // Signed in
