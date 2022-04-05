@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useContext } from "react";
 import "../pages/LandingPage/styles.css";
+import { Link } from "react-router-dom";
+import firebaseAuth from "../config/firebaseAuth";
+import AuthContext from "../context/AuthContext";
+import { signOut } from "firebase/auth";
 
 const Navbar = ({ isFixedTop }) => {
+  const authenticatedUser = useContext(AuthContext);
+  const onLogoutClick = async () => {
+    await signOut(firebaseAuth);
+  };
   return (
     <header className={isFixedTop}>
       <div className="container-nav">
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
-          <span className="navbar-brand logo">Gemology</span>
+          <Link className="navbar-brand logo" to={"/"}>
+            Gamelogy
+          </Link>
           <button
             className="navbar-toggler"
             type="button"
@@ -22,10 +32,10 @@ const Navbar = ({ isFixedTop }) => {
             id="navbarTogglerDemo02"
           >
             <ul className="navbar-nav m-auto mt-2 mt-lg-0">
-              <li className="nav-item active">
-                <a className="nav-link" href="#home">
-                  Home <span className="sr-only">(current)</span>
-                </a>
+              <li className="nav-item">
+                <Link className="nav-link" to={"/"}>
+                  <div>Home</div>
+                </Link>
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="#games">
@@ -42,19 +52,34 @@ const Navbar = ({ isFixedTop }) => {
                   Requirements
                 </a>
               </li>
+              <li className="nav-item">
+                <Link className="nav-link" to={"/game"}>
+                  <div>Game</div>
+                </Link>
+              </li>
             </ul>
             <div className="form-inline my-2 my-lg-0">
               <ul className="navbar-nav mt-2 mt-lg-0">
-                <li className="nav-item">
-                  <a className="nav-link" href="register.html">
-                    Register
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="login.html">
-                    Login
-                  </a>
-                </li>
+                {!authenticatedUser ? (
+                  <>
+                    <li className="nav-item">
+                      <Link className="nav-link" to={"/register"}>
+                        <div>Register</div>
+                      </Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link className="nav-link" to={"/login"}>
+                        <div>Login</div>
+                      </Link>
+                    </li>
+                  </>
+                ) : (
+                  <li className="nav-item" onClick={onLogoutClick}>
+                    <div className="nav-link" style={{ color: "white" }}>
+                      {authenticatedUser.email}
+                    </div>
+                  </li>
+                )}
               </ul>
             </div>
           </div>

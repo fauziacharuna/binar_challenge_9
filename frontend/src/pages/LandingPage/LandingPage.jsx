@@ -1,23 +1,29 @@
 import React from "react";
+import Navbar from "../../components/Navbar";
+import { useNavigate } from "react-router-dom";
 import "./styles.css";
 import Navbar from '../Navbar/Navbar'
 
 const LandingPage = () => {
+  var navigate = useNavigate();
+
+  const navigateGame = () => {
+    navigate("/game");
+  };
+
   return (
     <>
       <div className="container-fluid main" id="home">
-        <header className="fixed-top">
-          <div className="container-nav">
-            <Navbar/>
-          </div>
-        </header>
+        <Navbar isFixedTop={"fixed-top"} />
         <div className="container-fluid hero">
           <div className="row justify-content-center">
             <div className="col-md-8 col-lg-10 col-xl-12">
               <div className="container hero text-center text-white">
                 <h1 className="display-2">PLAY TRADISIONAL</h1>
                 <p>Experience new tradisional game play</p>
-                <button className="button-play">PLAY NOW</button>
+                <button onClick={navigateGame} className="button-play">
+                  Play Now
+                </button>
               </div>
               <br />
               <div className="text-center story">
@@ -234,7 +240,7 @@ const LandingPage = () => {
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="2">
+                  <td colSpan="2">
                     <h5>GRAPHICS:</h5>
                     <p>
                       NVIDIA GeForce GTX 660 2GB or
@@ -307,7 +313,10 @@ const LandingPage = () => {
                             <h6 className="person-job">Nerdreactor</h6>
                           </div>
                           <div className="contact-section">
-                            <img src="../../../assets/twitter.svg" alt="twitter" />
+                            <img
+                              src="../../../assets/twitter.svg"
+                              alt="twitter"
+                            />
                           </div>
                         </div>
                         <h6 className="text-white">
@@ -336,7 +345,10 @@ const LandingPage = () => {
                             <h6 className="person-job">Uproxx</h6>
                           </div>
                           <div>
-                            <img src="../../../assets/twitter.svg" alt="twitter" />
+                            <img
+                              src="../../../assets/twitter.svg"
+                              alt="twitter"
+                            />
                           </div>
                         </div>
                         <h6 className="text-white">

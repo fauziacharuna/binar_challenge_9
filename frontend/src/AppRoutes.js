@@ -1,22 +1,37 @@
-import React from "react";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Game from "./pages/Games/Game";
 import LandingPage from "./pages/LandingPage/LandingPage";
 import LoginPage from "./pages/Login/LoginPage";
 import RegisterPage from "./pages/Register/RegisterPage";
 import ProfilePage from "./pages/Profile/ProfilePage";
 
-const AppRoutes = () => {
+import { onAuthStateChanged } from "firebase/auth";
+import firebaseAuth from "./config/firebaseAuth";
+import AuthContext from "./context/AuthContext";
 
+const AppRoutes = () => {
+  const [authenticatedUser, setAuthenticatedUser] = useState(null);
+
+  useEffect(() => {
+    onAuthStateChanged(firebaseAuth, (user) => {
+      setAuthenticatedUser(user);
+    });
+  }, []);
   return (
     <>
-      <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/" element={<LandingPage/>} />
-          <Route path="/profile/:id" element={<ProfilePage/>} />
-        <Route path="/game" element={<Game />} />
-      </Routes>
+      <AuthContext.Provider value={authenticatedUser}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/game" element={<Game />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/" element={<LandingPage />} />
+              <Route path="/profile/:id" element={<ProfilePage/>} />
+
+          </Routes>
+        </BrowserRouter>
+      </AuthContext.Provider>
     </>
   );
 };

@@ -1,20 +1,94 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import firebaseAuth from "../../config/firebaseAuth";
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  getAuth,
+} from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
+  let navigate = useNavigate();
+  const [credentials, setCredentials] = useState({
+    email: "",
+    password: "",
+  });
+
+  const onLoginClick = () => {
+    const { email, password } = credentials;
+    signInWithEmailAndPassword(firebaseAuth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        console.log(user);
+        if (userCredential) {
+          navigate("/");
+        }
+        // ...
+      })
+      .catch((error) => {
+        console.error(error);
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorMessage);
+        // ..
+      });
+  };
+
+  const onGoogleLogin = () => {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({
+      login_hint: "user@example.com",
+    });
+    const auth = getAuth();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        if (token && user) {
+          navigate("/");
+        }
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
+  };
+
+  const onValueChange = (event, label) => {
+    const value = event.target.value;
+    setCredentials((prevState) => ({
+      ...prevState,
+      [label]: value,
+    }));
+  };
   return (
     <div style={{ backgroundColor: "#252525" }}>
       <div className="container-fluid">
         <div className="row">
           <div className="col" style={{ marginTop: 61, marginLeft: 72 }}>
-            <h3
-              style={{
-                color: "#FBBC05",
-                fontWeight: "bold",
-                fontSize: "36px",
-              }}
-            >
-              Gemology
-            </h3>
+            <Link to={"/"}>
+              <h3
+                style={{
+                  color: "#FBBC05",
+                  fontWeight: "bold",
+                  fontSize: "36px",
+                }}
+              >
+                Gemology
+              </h3>
+            </Link>
             <div
               className="mx-auto"
               style={{
@@ -50,6 +124,7 @@ const LoginPage = () => {
                   }}
                   type="email"
                   placeholder="Masukkan Email"
+                  onChange={(event) => onValueChange(event, "email")}
                 />
                 <input
                   className="w-100"
@@ -64,6 +139,7 @@ const LoginPage = () => {
                   }}
                   type="password"
                   placeholder="Kata Sandi"
+                  onChange={(event) => onValueChange(event, "password")}
                 />
                 <button
                   className="w-100"
@@ -76,6 +152,7 @@ const LoginPage = () => {
                     fontSize: "16px",
                     border: "none",
                   }}
+                  onClick={onLoginClick}
                 >
                   MASUK
                 </button>
@@ -137,7 +214,10 @@ const LoginPage = () => {
                     border: "1px solid #D0D0D0",
                   }}
                 >
-                  <div className="d-flex mx-auto justify-content-center">
+                  <div
+                    onClick={onGoogleLogin}
+                    className="d-flex mx-auto justify-content-center"
+                  >
                     <img
                       style={{ paddingRight: "16px" }}
                       src="../../../assets/img-google.svg"
