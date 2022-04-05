@@ -8,6 +8,7 @@ import {
   getAuth,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const LoginPage = () => {
   let navigate = useNavigate();
@@ -16,6 +17,7 @@ const LoginPage = () => {
     password: "",
   });
 
+
   const onLoginClick = () => {
     const { email, password } = credentials;
     signInWithEmailAndPassword(firebaseAuth, email, password)
@@ -23,7 +25,9 @@ const LoginPage = () => {
         // Signed in
         const user = userCredential.user;
         console.log(user);
-        if (userCredential) {
+          Swal.fire("Success", `${user.email} Berhasil login`, "success");
+
+          if (userCredential) {
           navigate("/");
         }
         // ...
@@ -33,7 +37,9 @@ const LoginPage = () => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorMessage);
-        // ..
+          Swal.fire("Error", `${errorMessage}`, "error");
+
+          // ..
       });
   };
 
@@ -50,7 +56,9 @@ const LoginPage = () => {
         const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
-        if (token && user) {
+          Swal.fire("Success", `${user.email} Berhasil ditambahkan`, "success");
+
+          if (token && user) {
           navigate("/");
         }
       })
