@@ -27,8 +27,7 @@ const AppRoutes = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/" element={<LandingPage />} />
-              <Route path="/profile/:id" element={<ProfilePage/>} />
-
+            <Route path="/profile/:id" element={<ProfilePage />} />
           </Routes>
         </BrowserRouter>
       </AuthContext.Provider>
