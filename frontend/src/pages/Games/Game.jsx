@@ -17,7 +17,7 @@ import { Navigate, useLocation } from "react-router-dom";
 function Game() {
   const location = useLocation();
   const authenticatedUser = useContext(AuthContext);
-  console.log(authenticatedUser.uid);
+  // console.log(authenticatedUser.uid);
   const weapons = ["rock", "paper", "scissors"];
   const [playerOne, setPlayerOne] = useState(weapons[0]);
   const [playerTwo, setPlayerTwo] = useState(weapons[0]);
@@ -60,7 +60,7 @@ function Game() {
     );
     const querySnapshot = await getDocs(q);
     const res = querySnapshot.forEach((doc) => {
-      console.log(doc.id, " => ", doc.data().score);
+      // console.log(doc.id, " => ", doc.data().score);
       setUid(doc.id);
       setScoreFromDoc(doc.data().score);
     });
@@ -74,46 +74,47 @@ function Game() {
       return;
     }
   };
+  if (authenticatedUser == null) {
+    return     <Navigate to={"/login"} replace state={{ from: location }} />
 
-  if (authenticatedUser === undefined) return null;
+  } else {
 
-  return authenticatedUser ? (
-    <>
-      <Navbar />
-      <h1 style={{ textAlign: "center" }}>Rock Paper Scissors</h1>
-      <div className="text-center">
-        <div>
-          <Player weapon={playerOne} />
-          <Player weapon={playerTwo} />
-        </div>
-        <div>
-          <button className="weaponBtn" onClick={() => selectWeapon("rock")}>
-            rock
-          </button>
-          <button className="weaponBtn" onClick={() => selectWeapon("paper")}>
-            paper
-          </button>
-          <button
-            className="weaponBtn"
-            onClick={() => selectWeapon("scissors")}
-          >
-            scissor
-          </button>
-        </div>
-        <div className="winner">{winner}</div>
-        <div>
-          <h1>Score: {score}</h1>
-        </div>
-        <div>
-          <h1>Player: {authenticatedUser.displayName}</h1>
-          {console.log(authenticatedUser.displayName)}
-        </div>
-      </div>
-      <button onClick={() => updateScore()}>Submit Score</button>
-    </>
-  ) : (
-    <Navigate to={"/login"} replace state={{ from: location }} />
-  );
+    return  (
+        <>
+          <Navbar/>
+          <h1 style={{textAlign: "center"}}>Rock Paper Scissors</h1>
+          <div className="text-center">
+            <div>
+              <Player weapon={playerOne}/>
+              <Player weapon={playerTwo}/>
+            </div>
+            <div>
+              <button className="weaponBtn" onClick={() => selectWeapon("rock")}>
+                rock
+              </button>
+              <button className="weaponBtn" onClick={() => selectWeapon("paper")}>
+                paper
+              </button>
+              <button
+                  className="weaponBtn"
+                  onClick={() => selectWeapon("scissors")}
+              >
+                scissor
+              </button>
+            </div>
+            <div className="winner">{winner}</div>
+            <div>
+              <h1>Score: {score}</h1>
+            </div>
+            <div>
+              <h1>Player: {authenticatedUser.displayName}</h1>
+              {console.log(authenticatedUser.displayName)}
+            </div>
+          </div>
+          <button onClick={() => updateScore()}>Submit Score</button>
+        </>
+    )
+  }
 }
 
 export default Game;
