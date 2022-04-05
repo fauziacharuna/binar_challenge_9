@@ -2,7 +2,6 @@ import React from "react";
 import Navbar from "../../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import "./styles.css";
-import Navbar from '../Navbar/Navbar'
 
 const LandingPage = () => {
   var navigate = useNavigate();
