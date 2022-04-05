@@ -101,7 +101,7 @@ const RegisterPage = () => {
                   }}
                   type="text"
                   placeholder="Nama"
-                  onChange={(event) => onValueChange(event, "nama")}
+                  onChange={(event) => onValueChange(event, "displayName")}
                 />
                 <input
                   className="w-100"

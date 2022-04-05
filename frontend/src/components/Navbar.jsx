@@ -74,11 +74,18 @@ const Navbar = ({ isFixedTop }) => {
                     </li>
                   </>
                 ) : (
-                  <li className="nav-item" onClick={onLogoutClick}>
-                    <div className="nav-link" style={{ color: "white" }}>
+                  <>
+                  <li className="nav-item">
+                    <Link className="nav-link" style={{ color: "white" }} to={"/profile/"}>
                       {authenticatedUser.email}
+                    </Link>
+                  </li>
+                  <li className="nav-item" onClick={onLogoutClick}>
+                    <div className="nav-link" style={{ color: "white", fontSize: "1rem", lineHeight:"1.75rem", fontWeight: "bold" }}>
+                      Logout
                     </div>
                   </li>
+                  </>
                 )}
               </ul>
             </div>
