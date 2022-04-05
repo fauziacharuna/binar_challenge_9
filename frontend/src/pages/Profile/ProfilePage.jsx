@@ -15,8 +15,6 @@ import {
 } from "firebase/auth";
 import firebaseDB from "../../config/firebaseDB";
 import {
-    doc,
-    updateDoc,
     where,
     getDocs,
     query,
@@ -30,7 +28,6 @@ const ProfilePage = () => {
 
     const auth = getAuth();
     const authenticatedUser = useContext(AuthContext);
-    console.log(authenticatedUser);
 
     let navigate = useNavigate();
 
@@ -43,10 +40,11 @@ const ProfilePage = () => {
     const [uid, setUid] = useState("");
     const [scoreFromDoc, setScoreFromDoc] = useState(0);
 
-    const q = query(
+    const q = authenticatedUser ?
+    query(
         collection(firebaseDB, "users"),
         where("uid", "==", authenticatedUser.uid)
-    );
+    ) : null;
 
     async function getScore() {
         const querySnapshot = await getDocs(q);
@@ -56,7 +54,7 @@ const ProfilePage = () => {
             setScoreFromDoc(doc.data().score);
         });
     }
-    useEffect(getScore, [])
+    useEffect(getScore, [authenticatedUser])
 
     const { displayName, email, password } = credentials;
 
@@ -140,11 +138,11 @@ const ProfilePage = () => {
                             </Button>
                             <Form.Group className="mb-3">
                                 <Form.Label className="text-white">Nama</Form.Label>
-                                <Form.Control className="edittable" defaultValue={authenticatedUser.displayName} onChange={(event) => onValueChange(event, "displayName")} disabled />
+                                <Form.Control className="edittable" defaultValue={authenticatedUser && authenticatedUser.displayName} onChange={(event) => onValueChange(event, "displayName")} disabled />
                             </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label className="text-white">Email</Form.Label>
-                                <Form.Control className="edittable" defaultValue={authenticatedUser.email} onChange={(event) => onValueChange(event, "email")} disabled />
+                                <Form.Control className="edittable" defaultValue={authenticatedUser && authenticatedUser.email} onChange={(event) => onValueChange(event, "email")} disabled />
                             </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label className="text-white">Password</Form.Label>
