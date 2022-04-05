@@ -1,37 +1,46 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  updateProfile,
+} from "firebase/auth";
 import firebaseAuth from "../../config/firebaseAuth";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
-    let navigate = useNavigate();
+  let navigate = useNavigate();
+  const auth = getAuth();
 
-    const [credentials, setCredentials] = useState({
+  const [credentials, setCredentials] = useState({
+    displayName: "",
     email: "",
     password: "",
   });
 
   const onRegisterClick = () => {
     const { name, email, password } = credentials;
-    createUserWithEmailAndPassword(firebaseAuth,  email, password)
+    createUserWithEmailAndPassword(firebaseAuth, email, password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
-          Swal.fire("Success", `${user.email} Berhasil ditambahkan`, "success");
-          navigate("/");
+        updateProfile(auth.currentUser, {
+          displayName,
+        }).then(() => {});
+        Swal.fire("Success", `${user.email} Berhasil ditambahkan`, "success");
+        navigate("/");
 
-          console.log(userCredential);
+        console.log(userCredential);
         // ...
       })
       .catch((error) => {
         console.error(error);
         const errorCode = error.code;
         const errorMessage = error.message;
-          Swal.fire("Error!", `${errorMessage}`, "error");
+        Swal.fire("Error!", `${errorMessage}`, "error");
 
-          // ..
+        // ..
       });
   };
 

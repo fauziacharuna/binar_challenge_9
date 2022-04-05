@@ -1,9 +1,9 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import AuthContext from "../../context/AuthContext";
 import Navbar from "../../components/Navbar";
 import Player from "./player";
 import "./styles.css";
-import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
 function Game() {
   const location = useLocation();
@@ -12,42 +12,36 @@ function Game() {
   const [playerOne, setPlayerOne] = useState(weapons[0]);
   const [playerTwo, setPlayerTwo] = useState(weapons[0]);
   const [winner, setWinner] = useState("");
-  let score = 0;
+  const [score, setScore] = useState(0);
 
-  const startGame = () => {
-    let counter = 0;
-    let gameInterval = setInterval(() => {
-      counter++;
-      setPlayerTwo(weapons[Math.floor(Math.random() * weapons.length)]);
-      setWinner("");
-      if (counter > 5) {
-        clearInterval(gameInterval);
-        setWinner(selectWinner());
-      }
-    }, 100);
-  };
-
-  const selectWinner = () => {
-    if (playerOne === playerTwo) {
-      return "Oops it's a Tie!";
-    } else if (
-      (playerOne === "rock" && playerTwo === "scissors") ||
-      (playerOne === "scissors" && playerTwo === "paper") ||
-      (playerOne === "paper" && playerTwo === "rock")
-    ) {
-      score++;
-      return "Player One Wins!";
-    } else {
-      return "Player Two Wins!";
+  useEffect(() => {
+    switch (playerOne + playerTwo) {
+      case "scissorspaper":
+      case "rockscissors":
+      case "paperrock":
+        setWinner("YOU WIN!");
+        setScore(score + 1);
+        break;
+      case "paperscissors":
+      case "scissorsrock":
+      case "rockpaper":
+        setWinner("YOU LOSE!");
+        break;
+      case "rockrock":
+      case "paperpaper":
+      case "scissorsscissors":
+        setWinner("ITS A DRAW!");
+        break;
     }
-  };
+  }, [playerOne, playerTwo]);
 
   const selectWeapon = (weapon) => {
     setPlayerOne(weapon);
+    setPlayerTwo(weapons[Math.floor(Math.random() * weapons.length)]);
     setWinner("");
   };
 
-  if (authenticatedUser === undefined || null) return null;
+  if (authenticatedUser === undefined) return null;
 
   return authenticatedUser ? (
     <>
@@ -72,11 +66,14 @@ function Game() {
             scissor
           </button>
         </div>
-        <div className="winner">{winner ? selectWinner() : null}</div>
-        <button type="button" onClick={() => startGame()}>
-          Start!
-        </button>
-        Score: {score}
+        <div className="winner">{winner}</div>
+        <div>
+          <h1>Score: {score}</h1>
+        </div>
+        <div>
+          <h1>Player: {authenticatedUser.displayName}</h1>
+          {console.log(authenticatedUser.displayName)}
+        </div>
       </div>
     </>
   ) : (
